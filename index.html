@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قاعدة بيانات السموم</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c5282 0%, #1e3a5f 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .logo-fixed {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 80px;
+            height: 80px;
+            background: white;
+            padding: 10px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+
+        .logo-fixed:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        }
+
+        .logo-fixed img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            padding: 20px 0;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .search-icon {
+            font-size: 1.2em;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .search-section {
+            background: white;
+            border-radius: 25px;
+            padding: 40px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 18px 25px;
+            border: 3px solid #3b82f6;
+            border-radius: 50px;
+            font-size: 1.1em;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .search-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-btn:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .category-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .tag {
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tag:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+
+        .tag.active {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            opacity: 0.9;
+        }
+
+        .tag-plants {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .tag-medicine {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .tag-chemicals {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .tag-mushrooms {
+            background: #fce7f3;
+            color: #9f1239;
+        }
+
+        .tag-industrial {
+            background: #ffe4e6;
+            color: #991b1b;
+        }
+
+        .tag-animals {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .results-section {
+            background: white;
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .results-title {
+            color: #3b82f6;
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .result-card {
+            border: 3px solid #e5e7eb;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .result-card:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 5px 20px rgba(59, 130, 246, 0.1);
+        }
+
+        .result-card.highlighted {
+            border-color: #3b82f6;
+            background: #eff6ff;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .result-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #1e3a8a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .danger-badge {
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .danger-high {
+            background: #ef4444;
+            color: white;
+        }
+
+        .danger-medium {
+            background: #fbbf24;
+            color: #78350f;
+        }
+
+        .danger-low {
+            background: #86efac;
+            color: #166534;
+        }
+
+        .result-description {
+            color: #4b5563;
+            line-height: 1.8;
+            font-size: 1.05em;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+            font-size: 1.2em;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .logo-fixed {
+                width: 60px;
+                height: 60px;
+                top: 15px;
+                right: 15px;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .search-section, .results-section {
+                padding: 25px;
+            }
+
+            .search-box {
+                flex-direction: column;
+            }
+
+            .category-tags {
+                gap: 10px;
+            }
+
+            .tag {
+                font-size: 0.9em;
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-fixed">
+        <img src="final.png" alt="Logo" id="logoImg">
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>
+                <span class="search-icon">🔍</span>
+                قاعدة بيانات السموم
+            </h1>
+            <p>ابحث عن معلومات تفصيلية حول السموم والمواد الخطرة</p>
+        </div>
+
+        <div class="search-section">
+            <div class="search-box">
+                <input type="text" class="search-input" id="searchInput" placeholder="ابحث عن سم، مادة كيميائية، نبات سام أو دواء...">
+                <button class="search-btn" id="searchBtn">
+                    🔎 بحث
+                </button>
+            </div>
+
+            <div class="category-tags" id="categoryTags">
+                <button class="tag tag-plants" data-category="نباتات">🌿 نباتات سامة</button>
+                <button class="tag tag-medicine" data-category="أدوية">💊 أدوية</button>
+                <button class="tag tag-chemicals" data-category="كيميائية">⚗️ مواد كيميائية</button>
+                <button class="tag tag-animals" data-category="حيوانات">🐍 سموم حيوانية</button>
+                <button class="tag tag-mushrooms" data-category="فطريات">🍄 فطريات</button>
+                <button class="tag tag-industrial" data-category="صناعية">🏭 مواد صناعية</button>
+            </div>
+        </div>
+
+        <div class="results-section">
+            <h2 class="results-title" id="resultsTitle">النتائج الشائعة</h2>
+            <div id="resultsContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        // قاعدة البيانات
+        const poisonsDatabase = [
+            {
+                id: 1,
+                name: "سم الأفعى",
+                icon: "🐍",
+                category: "حيوانات",
+                danger: "عالية",
+                description: "سم الأفعى يحتوي على إنزيمات بروتينية تؤثر على الجهاز العصبي والدورة الدموية، يتطلب تدخلاً طبياً فورياً قوياً ويمكن أن يسبب شلل تنفسي وفشل كلوي إذا لم يتم العلاج بسرعة."
+            },
+            {
+                id: 2,
+                name: "نبات الدفلى",
+                icon: "🌿",
+                category: "نباتات",
+                danger: "عالية",
+                description: "نبات شديد السمية يحتوي على جليكوسيدات قلبية. جميع أجزاء النبات سامة ويمكن أن تسبب اضطرابات قلبية خطيرة وغثيان وقيء شديد. حتى استنشاق الدخان من حرق النبات خطير للغاية."
+            },
+            {
+                id: 3,
+                name: "باراسيتامول (جرعة زائدة)",
+                icon: "💊",
+                category: "أدوية",
+                danger: "متوسطة",
+                description: "الجرعات الزائدة من الباراسيتامول يمكن أن تسبب تلفاً كبدياً خطيراً. الحد الأقصى اليومي هو 4000 مجم للبالغين. الأعراض قد لا تظهر فوراً لكن الضرر يحدث بصمت."
+            },
+            {
+                id: 4,
+                name: "أول أكسيد الكربون",
+                icon: "☁️",
+                category: "كيميائية",
+                danger: "عالية",
+                description: "غاز عديم اللون والرائحة ينتج عن الاحتراق غير الكامل. يرتبط بالهيموجلوبين في الدم مانعاً نقل الأكسجين. يسبب صداع، دوار، غثيان وقد يؤدي للوفاة بسرعة."
+            },
+            {
+                id: 5,
+                name: "فطر الأمانيت السام",
+                icon: "🍄",
+                category: "فطريات",
+                danger: "عالية",
+                description: "من أخطر الفطريات السامة في العالم. يحتوي على سموم تدمر الكبد والكلى. الأعراض تظهر متأخرة (6-12 ساعة) ومعدل الوفيات مرتفع حتى مع العلاج."
+            },
+            {
+                id: 6,
+                name: "الزئبق",
+                icon: "💧",
+                category: "كيميائية",
+                danger: "عالية",
+                description: "معدن سائل سام يتراكم في الجسم. التعرض المزمن يسبب تلف الجهاز العصبي، الكلى، والجهاز الهضمي. خطير بشكل خاص في صورته العضوية (ميثيل الزئبق)."
+            },
+            {
+                id: 7,
+                name: "السيانيد",
+                icon: "⚠️",
+                category: "كيميائية",
+                danger: "عالية",
+                description: "سم قاتل فوري يمنع الخلايا من استخدام الأكسجين. موجود في بذور بعض الفواكه بتركيزات منخفضة. الجرعات العالية تسبب الوفاة خلال دقائق."
+            },
+            {
+                id: 8,
+                name: "الأسبرين (جرعة عالية)",
+                icon: "💊",
+                category: "أدوية",
+                danger: "متوسطة",
+                description: "الجرعات العالية من الأسبرين تسبب التسمم الساليسيلي الذي يؤدي لطنين الأذن، غثيان، حمى، وفي الحالات الشديدة تلف الكلى واضطراب حمضية الدم."
+            },
+            {
+                id: 9,
+                name: "نبات الخروع",
+                icon: "🌱",
+                category: "نباتات",
+                danger: "عالية",
+                description: "بذور الخروع تحتوي على الريسين، أحد أقوى السموم الطبيعية. كمية صغيرة كافية للقتل. يسبب قيء، إسهال دموي، تشنجات، وفشل كلوي."
+            },
+            {
+                id: 10,
+                name: "الكلور (غاز)",
+                icon: "☁️",
+                category: "صناعية",
+                danger: "عالية",
+                description: "غاز أخضر مصفر كاوي للغاية. يستخدم في التطهير لكنه خطير جداً عند الاستنشاق. يسبب تلف حاد للرئتين والجهاز التنفسي وقد يؤدي للوفاة."
+            },
+            {
+                id: 11,
+                name: "سم العقرب",
+                icon: "🦂",
+                category: "حيوانات",
+                danger: "متوسطة",
+                description: "يحتوي على سموم عصبية تسبب ألم شديد، تشنجات عضلية، صعوبة تنفس. معظم الأنواع غير قاتلة للبالغين لكنها خطيرة على الأطفال."
+            },
+            {
+                id: 12,
+                name: "الميثانول (كحول الخشب)",
+                icon: "🧪",
+                category: "كيميائية",
+                danger: "عالية",
+                description: "كحول صناعي سام جداً. حتى الكميات الصغيرة تسبب العمى وتلف الجهاز العصبي. يتحول في الجسم لحمض الفورميك القاتل."
+            },
+            {
+                id: 13,
+                name: "الديجوكسين (جرعة زائدة)",
+                icon: "💊",
+                category: "أدوية",
+                danger: "عالية",
+                description: "دواء قلبي قوي مستخرج من نبات الديجيتال. الجرعة الزائدة تسبب اضطرابات قلبية خطيرة، غثيان، ورؤية صفراء مخضرة."
+            },
+            {
+                id: 14,
+                name: "البيليدونا (ست الحسن)",
+                icon: "🫐",
+                category: "نباتات",
+                danger: "عالية",
+                description: "نبات يحتوي على الأتروبين والسكوبولامين. يسبب توسع حدقة العين، جفاف الفم، هلوسة، تشنجات وقد يؤدي للوفاة."
+            },
+            {
+                id: 15,
+                name: "الرصاص",
+                icon: "⚙️",
+                category: "صناعية",
+                danger: "متوسطة",
+                description: "معدن ثقيل يتراكم في العظام والأنسجة. التعرض المزمن يسبب تلف الجهاز العصبي خاصة عند الأطفال، فقر دم، وتلف الكلى."
+            },
+            {
+                id: 16,
+                name: "فطر الشيتاكي النيء",
+                icon: "🍄",
+                category: "فطريات",
+                danger: "منخفضة",
+                description: "يسبب طفح جلدي شديد يسمى التهاب الجلد الشيتاكي عند تناوله نيئاً. الأعراض مؤقتة لكنها مزعجة. الطهي يحطم المركب المسبب."
+            },
+            {
+                id: 17,
+                name: "سم قنديل البحر",
+                icon: "🪼",
+                category: "حيوانات",
+                danger: "متوسطة",
+                description: "بعض الأنواع مثل قنديل الصندوق قاتل. يسبب ألم شديد، تشنجات، صدمة، وفي الحالات الشديدة توقف القلب خلال دقائق."
+            },
+            {
+                id: 18,
+                name: "الفورمالديهايد",
+                icon: "🧪",
+                category: "صناعية",
+                danger: "متوسطة",
+                description: "مادة حافظة ومطهرة كاوية. الاستنشاق يسبب تهيج الجهاز التنفسي، حروق، ومصنف كمادة مسرطنة. خطر عند التركيزات العالية."
+            },
+            {
+                id: 19,
+                name: "الوارفارين (جرعة زائدة)",
+                icon: "💊",
+                category: "أدوية",
+                danger: "عالية",
+                description: "مضاد تخثر يستخدم دواءً وسم فئران. الجرعة الزائدة تسبب نزيف داخلي خطير قد يكون قاتلاً. يحتاج مراقبة دقيقة."
+            },
+            {
+                id: 20,
+                name: "نبات الحشيش السام",
+                icon: "🌿",
+                category: "نباتات",
+                danger: "عالية",
+                description: "يحتوي على الكونين، سم عصبي قوي. يسبب شلل تدريجي يبدأ من الأطراف ويصل للجهاز التنفسي. استخدم لإعدام سقراط."
+            }
+        ];
+
+        // عناصر الصفحة
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const categoryTags = document.querySelectorAll('.tag');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const resultsTitle = document.getElementById('resultsTitle');
+        const logoImg = document.getElementById('logoImg');
+
+        let currentFilter = 'all';
+
+        // عرض النتائج
+        function displayResults(results, title = 'النتائج الشائعة') {
+            resultsTitle.textContent = title;
+            
+            if (results.length === 0) {
+                resultsContainer.innerHTML = '<div class="no-results">😕 لا توجد نتائج مطابقة للبحث</div>';
+                return;
+            }
+
+            resultsContainer.innerHTML = results.map(item => `
+                <div class="result-card" data-id="${item.id}">
+                    <div class="result-header">
+                        <div class="result-title">${item.icon} ${item.name}</div>
+                        <span class="danger-badge danger-${getDangerClass(item.danger)}">خطورة ${item.danger}</span>
+                    </div>
+                    <p class="result-description">${item.description}</p>
+                </div>
+            `).join('');
+
+            // إضافة حدث النقر على الكروت
+            document.querySelectorAll('.result-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    document.querySelectorAll('.result-card').forEach(c => c.classList.remove('highlighted'));
+                    this.classList.add('highlighted');
+                });
+            });
+        }
+
+        // تحديد نوع الخطورة
+        function getDangerClass(danger) {
+            if (danger === 'عالية') return 'high';
+            if (danger === 'متوسطة') return 'medium';
+            return 'low';
+        }
+
+        // البحث
+        function performSearch(query) {
+            query = query.trim().toLowerCase();
+            
+            if (!query) {
+                displayResults(poisonsDatabase.slice(0, 3));
+                return;
+            }
+
+            const results = poisonsDatabase.filter(item => 
+                item.name.toLowerCase().includes(query) ||
+                item.description.toLowerCase().includes(query) ||
+                item.category.toLowerCase().includes(query)
+            );
+
+            displayResults(results, `نتائج البحث: "${query}"`);
+        }
+
+        // الفلترة حسب الفئة
+        function filterByCategory(category) {
+            if (category === 'all') {
+                displayResults(poisonsDatabase.slice(0, 3), 'النتائج الشائعة');
+            } else {
+                const results = poisonsDatabase.filter(item => item.category === category);
+                displayResults(results, `${getCategoryName(category)}`);
+            }
+        }
+
+        function getCategoryName(category) {
+            const names = {
+                'نباتات': 'نباتات سامة',
+                'أدوية': 'أدوية',
+                'كيميائية': 'مواد كيميائية',
+                'حيوانات': 'سموم حيوانية',
+                'فطريات': 'فطريات',
+                'صناعية': 'مواد صناعية'
+            };
+            return names[category] || category;
+        }
+
+        // أحداث البحث
+        searchBtn.addEventListener('click', () => {
+            performSearch(searchInput.value);
+            currentFilter = 'all';
+            categoryTags.forEach(tag => tag.classList.remove('active'));
+        });
+
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                searchBtn.click();
+            }
+        });
+
+        // أحداث الفئات
+        categoryTags.forEach(tag => {
+            tag.addEventListener('click', function() {
+                const category = this.dataset.category;
+                
+                categoryTags.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                searchInput.value = '';
+                currentFilter = category;
+                filterByCategory(category);
+            });
+        });
+
+        // معالج خطأ اللوجو
+        logoImg.addEventListener('error', function() {
+            this.parentElement.style.background = 'rgba(255,255,255,0.1)';
+            this.style.display = 'none';
+            this.parentElement.innerHTML += '<span style="color:white;font-size:2em;">🔬</span>';
+        });
+
+        // عرض النتائج الافتراضية
+        displayResults(poisonsDatabase.slice(0, 3));
+    </script>
+</body>
+</html>
