@@ -4,7 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>قاعدة بيانات السموم</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #1e293b;
+            --secondary-color: #0ea5e9;
+            --accent-color: #3b82f6;
+            --background-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --danger-high-bg: #fee2e2;
+            --danger-high-text: #991b1b;
+            --danger-medium-bg: #fef3c7;
+            --danger-medium-text: #92400e;
+            --danger-low-bg: #dcfce7;
+            --danger-low-text: #166534;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,335 +35,313 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #2c5282 0%, #1e3a5f 100%);
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.6;
             min-height: 100vh;
-            padding: 20px;
         }
 
-        .logo-fixed {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 80px;
-            height: 80px;
-            background: white;
-            padding: 10px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-            z-index: 1000;
-            transition: all 0.3s;
+        /* Navbar */
+        .navbar {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
         }
 
-        .logo-fixed:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        .logo-fixed img {
-            width: 100%;
-            height: 100%;
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--primary-color);
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: 40px;
             object-fit: contain;
         }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
+        .brand-text {
+            font-size: 1.25rem;
+            font-weight: 700;
         }
 
-        .header {
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(to bottom, var(--surface-color), var(--background-color));
+            padding: 4rem 20px;
             text-align: center;
-            color: white;
-            margin-bottom: 30px;
-            padding: 20px 0;
+            border-bottom: 1px solid var(--border-color);
         }
 
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
         }
 
-        .search-icon {
-            font-size: 1.2em;
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 3rem;
         }
 
-        .header p {
-            font-size: 1.1em;
-            opacity: 0.95;
-        }
-
-        .search-section {
-            background: white;
-            border-radius: 25px;
-            padding: 40px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        /* Search & Filter */
+        .controls-container {
+            max-width: 800px;
+            margin: -2rem auto 3rem;
+            padding: 0 20px;
         }
 
         .search-box {
+            background: var(--surface-color);
+            padding: 10px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
             display: flex;
-            gap: 15px;
-            margin-bottom: 30px;
+            gap: 10px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 2rem;
         }
 
         .search-input {
             flex: 1;
-            padding: 18px 25px;
-            border: 3px solid #3b82f6;
-            border-radius: 50px;
-            font-size: 1.1em;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1.1rem;
+            font-family: inherit;
             outline: none;
-            transition: all 0.3s;
-        }
-
-        .search-input:focus {
-            border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            color: var(--text-primary);
         }
 
         .search-btn {
-            background: #3b82f6;
+            background-color: var(--secondary-color);
             color: white;
             border: none;
-            padding: 18px 40px;
-            border-radius: 50px;
-            font-size: 1.1em;
-            font-weight: bold;
+            padding: 12px 30px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-family: inherit;
             cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            transition: background-color 0.2s;
         }
 
         .search-btn:hover {
-            background: #2563eb;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+            background-color: #0284c7;
         }
 
-        .category-tags {
+        .categories {
             display: flex;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 10px;
             justify-content: center;
         }
 
-        .tag {
-            padding: 12px 25px;
+        .category-tag {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
             border-radius: 50px;
-            font-size: 1em;
-            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
             cursor: pointer;
-            transition: all 0.3s;
-            border: none;
+            transition: all 0.2s;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
-        .tag:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        .category-tag:hover {
+            border-color: var(--secondary-color);
+            color: var(--secondary-color);
+            background-color: #f0f9ff;
         }
 
-        .tag.active {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            opacity: 0.9;
+        .category-tag.active {
+            background-color: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+            box-shadow: var(--shadow-md);
         }
 
-        .tag-plants {
-            background: #dcfce7;
-            color: #166534;
+        /* Results Grid */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px 4rem;
         }
 
-        .tag-medicine {
-            background: #fef3c7;
-            color: #92400e;
-        }
-
-        .tag-chemicals {
-            background: #dbeafe;
-            color: #1e40af;
-        }
-
-        .tag-mushrooms {
-            background: #fce7f3;
-            color: #9f1239;
-        }
-
-        .tag-industrial {
-            background: #ffe4e6;
-            color: #991b1b;
-        }
-
-        .tag-animals {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-
-        .results-section {
-            background: white;
-            border-radius: 25px;
-            padding: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .results-title {
-            color: #3b82f6;
-            font-size: 1.8em;
-            font-weight: bold;
-            margin-bottom: 30px;
-            text-align: center;
-        }
-
-        .result-card {
-            border: 3px solid #e5e7eb;
-            border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 20px;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-
-        .result-card:hover {
-            border-color: #3b82f6;
-            box-shadow: 0 5px 20px rgba(59, 130, 246, 0.1);
-        }
-
-        .result-card.highlighted {
-            border-color: #3b82f6;
-            background: #eff6ff;
-        }
-
-        .result-header {
+        .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
         }
 
-        .result-title {
-            font-size: 1.4em;
-            font-weight: bold;
-            color: #1e3a8a;
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.2s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--secondary-color);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            background: var(--background-color);
+            width: 64px;
+            height: 64px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
+            border-radius: 12px;
         }
 
         .danger-badge {
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-size: 0.9em;
-            font-weight: bold;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
         }
 
-        .danger-high {
-            background: #ef4444;
-            color: white;
+        .danger-high { background: var(--danger-high-bg); color: var(--danger-high-text); }
+        .danger-medium { background: var(--danger-medium-bg); color: var(--danger-medium-text); }
+        .danger-low { background: var(--danger-low-bg); color: var(--danger-low-text); }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 8px;
         }
 
-        .danger-medium {
-            background: #fbbf24;
-            color: #78350f;
+        .card-category {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            display: inline-block;
+            background: var(--background-color);
+            padding: 2px 8px;
+            border-radius: 4px;
         }
 
-        .danger-low {
-            background: #86efac;
-            color: #166534;
-        }
-
-        .result-description {
-            color: #4b5563;
-            line-height: 1.8;
-            font-size: 1.05em;
+        .card-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
         .no-results {
+            grid-column: 1 / -1;
             text-align: center;
-            padding: 40px;
-            color: #6b7280;
-            font-size: 1.2em;
-        }
-
-        .hidden {
-            display: none;
+            padding: 4rem;
+            color: var(--text-secondary);
+            background: var(--surface-color);
+            border-radius: 16px;
+            border: 1px dashed var(--border-color);
         }
 
         @media (max-width: 768px) {
-            .logo-fixed {
-                width: 60px;
-                height: 60px;
-                top: 15px;
-                right: 15px;
-            }
-
-            .header h1 {
-                font-size: 1.8em;
-            }
-
-            .search-section, .results-section {
-                padding: 25px;
-            }
-
-            .search-box {
-                flex-direction: column;
-            }
-
-            .category-tags {
-                gap: 10px;
-            }
-
-            .tag {
-                font-size: 0.9em;
-                padding: 10px 20px;
-            }
+            .hero-title { font-size: 2rem; }
+            .search-box { flex-direction: column; padding: 16px; }
+            .search-btn { width: 100%; }
+            .results-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <div class="logo-fixed">
-        <img src="final.png" alt="Logo" id="logoImg">
-    </div>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="brand">
+                <img src="final.png" alt="Logo" class="brand-logo" id="logoImg">
+                <span class="brand-text">قاعدة بيانات السموم</span>
+            </a>
+        </div>
+    </nav>
 
-    <div class="container">
-        <div class="header">
-            <h1>
-                <span class="search-icon">🔍</span>
-                قاعدة بيانات السموم
-            </h1>
-            <p>ابحث عن معلومات تفصيلية حول السموم والمواد الخطرة</p>
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1 class="hero-title">الموسوعة الشاملة للسموم</h1>
+        <p class="hero-subtitle">مرجع علمي موثوق للمواد السامة، النباتات، والأدوية الخطرة. ابحث وتعرف على المخاطر وطرق الوقاية.</p>
+    </section>
+
+    <!-- Search & Filters -->
+    <div class="controls-container">
+        <div class="search-box">
+            <input type="text" class="search-input" id="searchInput" placeholder="ابحث عن اسم المادة، الأعراض، أو التصنيف...">
+            <button class="search-btn" id="searchBtn">بحث</button>
         </div>
 
-        <div class="search-section">
-            <div class="search-box">
-                <input type="text" class="search-input" id="searchInput" placeholder="ابحث عن سم، مادة كيميائية، نبات سام أو دواء...">
-                <button class="search-btn" id="searchBtn">
-                    🔎 بحث
-                </button>
-            </div>
-
-            <div class="category-tags" id="categoryTags">
-                <button class="tag tag-plants" data-category="نباتات">🌿 نباتات سامة</button>
-                <button class="tag tag-medicine" data-category="أدوية">💊 أدوية</button>
-                <button class="tag tag-chemicals" data-category="كيميائية">⚗️ مواد كيميائية</button>
-                <button class="tag tag-animals" data-category="حيوانات">🐍 سموم حيوانية</button>
-                <button class="tag tag-mushrooms" data-category="فطريات">🍄 فطريات</button>
-                <button class="tag tag-industrial" data-category="صناعية">🏭 مواد صناعية</button>
-            </div>
-        </div>
-
-        <div class="results-section">
-            <h2 class="results-title" id="resultsTitle">النتائج الشائعة</h2>
-            <div id="resultsContainer"></div>
+        <div class="categories" id="categoryTags">
+            <button class="category-tag active" data-category="all">الكل</button>
+            <button class="category-tag" data-category="نباتات">🌿 نباتات</button>
+            <button class="category-tag" data-category="أدوية">💊 أدوية</button>
+            <button class="category-tag" data-category="كيميائية">⚗️ كيميائية</button>
+            <button class="category-tag" data-category="حيوانات">🐍 حيوانية</button>
+            <button class="category-tag" data-category="فطريات">🍄 فطريات</button>
+            <button class="category-tag" data-category="صناعية">🏭 صناعية</button>
         </div>
     </div>
+
+    <!-- Results Section -->
+    <main class="main-container">
+        <div class="section-header">
+            <h2 class="section-title" id="resultsTitle">أحدث الإضافات</h2>
+        </div>
+        <div id="resultsContainer" class="results-grid"></div>
+    </main>
 
     <script>
         // قاعدة البيانات
@@ -510,7 +511,7 @@
         // عناصر الصفحة
         const searchInput = document.getElementById('searchInput');
         const searchBtn = document.getElementById('searchBtn');
-        const categoryTags = document.querySelectorAll('.tag');
+        const categoryTags = document.querySelectorAll('.category-tag');
         const resultsContainer = document.getElementById('resultsContainer');
         const resultsTitle = document.getElementById('resultsTitle');
         const logoImg = document.getElementById('logoImg');
@@ -518,31 +519,30 @@
         let currentFilter = 'all';
 
         // عرض النتائج
-        function displayResults(results, title = 'النتائج الشائعة') {
-            resultsTitle.textContent = title;
+        function displayResults(results, title = 'النتائج') {
+            if (title) resultsTitle.textContent = title;
             
             if (results.length === 0) {
-                resultsContainer.innerHTML = '<div class="no-results">😕 لا توجد نتائج مطابقة للبحث</div>';
+                resultsContainer.innerHTML = `
+                    <div class="no-results">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
+                        <h3>لا توجد نتائج مطابقة</h3>
+                        <p>حاول البحث بكلمات مختلفة أو تغيير الفئة</p>
+                    </div>`;
                 return;
             }
 
             resultsContainer.innerHTML = results.map(item => `
-                <div class="result-card" data-id="${item.id}">
-                    <div class="result-header">
-                        <div class="result-title">${item.icon} ${item.name}</div>
+                <div class="card" data-id="${item.id}">
+                    <div class="card-header">
+                        <div class="card-icon">${item.icon}</div>
                         <span class="danger-badge danger-${getDangerClass(item.danger)}">خطورة ${item.danger}</span>
                     </div>
-                    <p class="result-description">${item.description}</p>
+                    <div class="card-title">${item.name}</div>
+                    <div class="card-category">${item.category}</div>
+                    <p class="card-desc">${item.description}</p>
                 </div>
             `).join('');
-
-            // إضافة حدث النقر على الكروت
-            document.querySelectorAll('.result-card').forEach(card => {
-                card.addEventListener('click', function() {
-                    document.querySelectorAll('.result-card').forEach(c => c.classList.remove('highlighted'));
-                    this.classList.add('highlighted');
-                });
-            });
         }
 
         // تحديد نوع الخطورة
@@ -557,77 +557,80 @@
             query = query.trim().toLowerCase();
             
             if (!query) {
-                displayResults(poisonsDatabase.slice(0, 3));
+                if (currentFilter === 'all') {
+                    displayResults(poisonsDatabase, 'جميع النتائج');
+                } else {
+                    filterByCategory(currentFilter);
+                }
                 return;
             }
 
-            const results = poisonsDatabase.filter(item => 
-                item.name.toLowerCase().includes(query) ||
-                item.description.toLowerCase().includes(query) ||
-                item.category.toLowerCase().includes(query)
-            );
+            const results = poisonsDatabase.filter(item => {
+                const matchesSearch = item.name.toLowerCase().includes(query) ||
+                                    item.description.toLowerCase().includes(query) ||
+                                    item.category.toLowerCase().includes(query);
+                const matchesCategory = currentFilter === 'all' || item.category === currentFilter;
+                
+                return matchesSearch && matchesCategory;
+            });
 
             displayResults(results, `نتائج البحث: "${query}"`);
         }
 
         // الفلترة حسب الفئة
         function filterByCategory(category) {
+            currentFilter = category;
+            
             if (category === 'all') {
-                displayResults(poisonsDatabase.slice(0, 3), 'النتائج الشائعة');
+                displayResults(poisonsDatabase, 'جميع النتائج');
             } else {
                 const results = poisonsDatabase.filter(item => item.category === category);
-                displayResults(results, `${getCategoryName(category)}`);
+                displayResults(results, `${category}`);
             }
-        }
-
-        function getCategoryName(category) {
-            const names = {
-                'نباتات': 'نباتات سامة',
-                'أدوية': 'أدوية',
-                'كيميائية': 'مواد كيميائية',
-                'حيوانات': 'سموم حيوانية',
-                'فطريات': 'فطريات',
-                'صناعية': 'مواد صناعية'
-            };
-            return names[category] || category;
         }
 
         // أحداث البحث
         searchBtn.addEventListener('click', () => {
             performSearch(searchInput.value);
-            currentFilter = 'all';
-            categoryTags.forEach(tag => tag.classList.remove('active'));
         });
 
         searchInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
-                searchBtn.click();
+                performSearch(searchInput.value);
+            }
+        });
+
+        searchInput.addEventListener('input', (e) => {
+            if (e.target.value === '') {
+                performSearch('');
             }
         });
 
         // أحداث الفئات
         categoryTags.forEach(tag => {
             tag.addEventListener('click', function() {
-                const category = this.dataset.category;
-                
+                // تحديث الستايل
                 categoryTags.forEach(t => t.classList.remove('active'));
                 this.classList.add('active');
                 
-                searchInput.value = '';
-                currentFilter = category;
+                // تنفيذ الفلترة
+                const category = this.dataset.category;
                 filterByCategory(category);
+                
+                // إعادة البحث إذا كان هناك نص
+                if (searchInput.value.trim()) {
+                    performSearch(searchInput.value);
+                }
             });
         });
 
         // معالج خطأ اللوجو
         logoImg.addEventListener('error', function() {
-            this.parentElement.style.background = 'rgba(255,255,255,0.1)';
             this.style.display = 'none';
-            this.parentElement.innerHTML += '<span style="color:white;font-size:2em;">🔬</span>';
         });
 
         // عرض النتائج الافتراضية
-        displayResults(poisonsDatabase.slice(0, 3));
+        displayResults(poisonsDatabase, 'جميع النتائج');
     </script>
 </body>
 </html>
